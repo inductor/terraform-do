@@ -57,4 +57,4 @@ Apply `bootstrap_node.sh` on worker-0, worker-1 and worker-2
 
 Run `kubeadm join` with internal IP
 
-Now you can use LoadBalancer :D
+Enjoy! Now you can use LoadBalancer and PVC on your cluster :D
