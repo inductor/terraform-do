@@ -62,29 +62,11 @@ echo "--cloud-provider=external --provider-id=digitalocean://`curl --silent http
 
 cat > ~/init_kubelet.yaml <<EOF
 apiVersion: kubeadm.k8s.io/v1beta2
-kind: InitConfiguration
-# nodeRegistration:
-#   kubeletExtraArgs:
-#     logging-format: "json"
----
-apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 controlPlaneEndpoint: "`curl --silent http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address`:6443"
 apiServer:
   certSANs:
   - "`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address`"
-#   extraArgs:
-#     logging-format: "json"
-# controllerManager:
-#   extraArgs:
-#     logging-format: "json"
-# scheduler:
-#   extraArgs:
-#     logging-format: "json"
-# ---
-# apiVersion: kubelet.config.k8s.io/v1beta1
-# kind: KubeletConfiguration
-# cgroupDriver: "systemd"
 EOF
 
 kubeadm init --config init_kubelet.yaml

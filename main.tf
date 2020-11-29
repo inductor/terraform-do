@@ -41,12 +41,12 @@ resource "digitalocean_droplet" "worker-2" {
 locals {
   infra_info = <<INFRA
 SSH information:
-ssh root@${digitalocean_droplet.master-0.ipv4_address}
-ssh root@${digitalocean_droplet.worker-0.ipv4_address}
-ssh root@${digitalocean_droplet.worker-1.ipv4_address}
-ssh root@${digitalocean_droplet.worker-2.ipv4_address}
+ssh root@${digitalocean_droplet.master-0.ipv4_address} # master-0
+ssh root@${digitalocean_droplet.worker-0.ipv4_address} # worker-0
+ssh root@${digitalocean_droplet.worker-1.ipv4_address} # worker-1
+ssh root@${digitalocean_droplet.worker-2.ipv4_address} # worker-2
 
-master internal IP: ${digitalocean_droplet.master-0.ipv4_address_private}
+master internal IP: ${digitalocean_droplet.master-0.ipv4_address_private} # use it on worker nodes to join the cluster
 INFRA
 }
 
