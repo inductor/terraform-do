@@ -69,6 +69,7 @@ nodeRegistration:
   criSocket: "/var/run/containerd/containerd.sock"
   kubeletExtraArgs:
     provider-id: "digitalocean://`curl --silent http://169.254.169.254/metadata/v1/id`"
+    node-ip: "`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address`"
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
