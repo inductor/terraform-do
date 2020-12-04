@@ -62,8 +62,6 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
-mkdir -p /var/lib/kubelet
-
 cat > ~/init_kubelet.yaml <<EOF
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration

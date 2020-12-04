@@ -12,7 +12,11 @@ Create an API token on Digital Ocean
 
 ```bash
 export DIGITALOCEAN_TOKEN=your_token
+export SPACES_ACCESS_KEY_ID=your_spaces_access_id
+export SPACES_SECRET_ACCESS_KEY=your_spaces_access_key
 ```
+
+Set your shell script to Digital Ocean Spaces(object storage) and modify data module in `main.tf`.
 
 Create SSH private key and register it on your Digital Ocean environment. By default the key name is WSL2, but you can change it.
 

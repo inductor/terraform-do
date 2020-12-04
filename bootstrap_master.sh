@@ -62,8 +62,6 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
-mkdir -p /var/lib/kubelet
-
 cat > ~/init_kubelet.yaml <<EOF
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
@@ -84,13 +82,21 @@ kind: KubeletConfiguration
 CgroupDriver: "systemd"
 EOF
 
-kubeadm init --config init_kubelet.yaml
+kubeadm init --config init_kubelet.yaml --skip-phases=addon/kube-proxy
 
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+helm repo add cilium https://helm.cilium.io/
+
+helm install cilium cilium/cilium --version 1.9.0 \
+    --namespace kube-system \
+    --set kubeProxyReplacement=strict \
+    --set k8sServiceHost=`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address` \
+    --set k8sServicePort=6443
 
 cat > ~/secret.yaml <<EOF
 apiVersion: v1
