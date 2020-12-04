@@ -62,6 +62,9 @@ apt-get update
 apt-get install -y kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
+mkdir -p /var/lib/kubelet
+echo "--provider-id=digitalocean://`curl --silent http://169.254.169.254/metadata/v1/id` --node-ip=`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address`" > /var/lib/kubelet/kubeadm-flags.env
+
 cat > ~/init_kubelet.yaml <<EOF
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
