@@ -6,6 +6,12 @@ data "digitalocean_ssh_key" "wsl2" {
   name = "WSL2"
 }
 
+data "digitalocean_spaces_bucket_object" "bootstrap_master" {
+  bucket = "inductor"
+  region = "fra1"
+  key    = "bootstrap_master.sh"
+}
+
 data "digitalocean_spaces_bucket_object" "bootstrap_worker" {
   bucket = "inductor"
   region = "fra1"
@@ -18,7 +24,7 @@ resource "digitalocean_droplet" "master-0" {
   region    = "sgp1"
   size      = "s-2vcpu-4gb"
   ssh_keys  = [data.digitalocean_ssh_key.wsl2.id]
-  user_data = data.digitalocean_spaces_bucket_object.bootstrap_worker.body
+  user_data = data.digitalocean_spaces_bucket_object.bootstrap_master.body
 }
 
 resource "digitalocean_droplet" "worker-0" {
