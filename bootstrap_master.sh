@@ -65,6 +65,10 @@ apt-mark hold kubelet kubeadm kubectl
 cat > ~/init_kubelet.yaml <<EOF
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
+bootstrapTokens:
+- token: "9a08jv.c0izixklcxtmnze7"
+  description: "kubeadm bootstrap token"
+  ttl: "24h"
 nodeRegistration:
   criSocket: "/var/run/containerd/containerd.sock"
   kubeletExtraArgs:
