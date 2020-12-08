@@ -50,6 +50,12 @@ sudo systemctl restart containerd
 cat <<EOF | tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
+vm.overcommit_memory = 1
+vm.panic_on_oom = 0
+kernel.panic = 10
+kernel.panic_on_oops = 1
+kernel.keys.root_maxkeys = 1000000
+kernel.keys.root_maxbytes = 25000000
 EOF
 sysctl --system
 
@@ -72,7 +78,6 @@ bootstrapTokens:
 nodeRegistration:
   criSocket: "/var/run/containerd/containerd.sock"
   kubeletExtraArgs:
-    provider-id: "digitalocean://`curl --silent http://169.254.169.254/metadata/v1/id`"
     node-ip: "`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address`"
 ---
 apiVersion: kubeadm.k8s.io/v1beta2
@@ -84,7 +89,9 @@ apiServer:
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-CgroupDriver: "systemd"
+cgroupDriver: "systemd"
+protectKernelDefaults: true
+providerId: "digitalocean://`curl --silent http://169.254.169.254/metadata/v1/id`"
 EOF
 
 kubeadm init --config init_kubelet.yaml --skip-phases=addon/kube-proxy
@@ -97,7 +104,7 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 
 helm repo add cilium https://helm.cilium.io/
 
-helm install cilium cilium/cilium --version 1.9.0 \
+helm install cilium cilium/cilium --version 1.9.1 \
     --namespace kube-system \
     --set kubeProxyReplacement=strict \
     --set k8sServiceHost=`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address` \
