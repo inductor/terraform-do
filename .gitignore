@@ -35,3 +35,5 @@ terraform.rc
 
 # Ignore envrc
 .envrc
+
+.terraform.lock.hcl
