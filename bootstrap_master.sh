@@ -42,7 +42,11 @@ sudo apt-get update && sudo apt-get install -y containerd.io
 sudo mkdir -p /etc/containerd
 sudo containerd config default > /etc/containerd/config.toml
 
-sed -e "/^          privileged_without_host_devices = false$/a\          \[plugins\.\"io\.containerd\.grpc\.v1\.cri\"\.containerd\.runtimes\.runc\.options\]\n            SystemdCgroup \= true" /etc/containerd/config.toml
+if grep -q SystemdCgroup "/etc/containerd/config.toml"; then
+  echo "Config found, skip rewriting..."
+else
+  sed -i -e "/^          \[plugins\.\"io\.containerd\.grpc\.v1\.cri\"\.containerd\.runtimes\.runc\.options\]$/a\            SystemdCgroup \= true" /etc/containerd/config.toml
+fi
 
 # Restart containerd
 sudo systemctl restart containerd
