@@ -108,7 +108,7 @@ curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bas
 
 helm repo add cilium https://helm.cilium.io/
 
-helm install cilium cilium/cilium --version 1.9.1 \
+helm install cilium cilium/cilium \
     --namespace kube-system \
     --set kubeProxyReplacement=strict \
     --set k8sServiceHost=`curl --silent http://169.254.169.254/metadata/v1/interfaces/private/0/ipv4/address` \
