@@ -26,26 +26,17 @@ sudo sysctl --system
 apt-get update && apt-get install -y \
   apt-transport-https ca-certificates curl software-properties-common gnupg2
 
-# Add Docker's official GPG key:
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key --keyring /etc/apt/trusted.gpg.d/docker.gpg add -
-
-# Add the Docker apt repository:
-add-apt-repository \
-  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) \
-  stable"
-
 ## Install containerd
-sudo apt-get update && sudo apt-get install -y containerd.io
+sudo apt-get update && sudo apt-get install -y containerd
 
 # Configure containerd
 sudo mkdir -p /etc/containerd
 sudo containerd config default > /etc/containerd/config.toml
 
-if grep -q SystemdCgroup "/etc/containerd/config.toml"; then
+if grep -q "SystemdCgroup = true" "/etc/containerd/config.toml"; then
   echo "Config found, skip rewriting..."
 else
-  sed -i -e "/^          \[plugins\.\"io\.containerd\.grpc\.v1\.cri\"\.containerd\.runtimes\.runc\.options\]$/a\            SystemdCgroup \= true" /etc/containerd/config.toml
+  sed -i -e "s/SystemdCgroup \= false/SystemdCgroup \= true/g" /etc/containerd/config.toml
 fi
 
 # Restart containerd
